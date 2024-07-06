@@ -79,6 +79,8 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ./hello-world-frontend
 
     - name: Run tests with React
       run: npm test -- --watchAll=false
+      working-directory: ./hello-world-frontend
