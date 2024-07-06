@@ -15,18 +15,18 @@ jobs:
 
       - name: Create .ssh directory with correct permissions
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          sudo mkdir -p ~/.ssh
+          sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
 
       - name: Generate public key from private key
         env:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
           ssh-keygen -y -f key.pem > key.pub
           cat key.pub
 
@@ -37,9 +37,9 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          cat key.pub | ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
-          rm key.pem key.pub
+          sudo chmod 600 key.pem
+          cat key.pub | ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo mkdir -p ~/.ssh && sudo chmod 700 ~/.ssh && sudo cat >> ~/.ssh/authorized_keys && sudo chmod 600 ~/.ssh/authorized_keys"
+          sudo rm key.pem key.pub
 
       - name: Verify SSH key permissions and authorized_keys on EC2 Instance 1
         env:
@@ -48,12 +48,12 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "ls -la ~/.ssh && cat ~/.ssh/authorized_keys"
-          rm key.pem
+          sudo chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo ls -la ~/.ssh && sudo cat ~/.ssh/authorized_keys"
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
 
       - name: Add public key to EC2 Instance 2 authorized_keys
         env:
@@ -62,10 +62,10 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
           ssh-keygen -y -f key.pem > key.pub
-          cat key.pub | ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys"
-          rm key.pem key.pub
+          cat key.pub | ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo mkdir -p ~/.ssh && sudo chmod 700 ~/.ssh && sudo cat >> ~/.ssh/authorized_keys && sudo chmod 600 ~/.ssh/authorized_keys"
+          sudo rm key.pem key.pub
 
       - name: Verify SSH key permissions and authorized_keys on EC2 Instance 2
         env:
@@ -74,9 +74,9 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "ls -la ~/.ssh && cat ~/.ssh/authorized_keys"
-          rm key.pem
+          sudo chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo ls -la ~/.ssh && sudo cat ~/.ssh/authorized_keys"
+          sudo rm key.pem
 
   copy:
     runs-on: ubuntu-latest
@@ -88,11 +88,11 @@ jobs:
 
       - name: Create .ssh directory with correct permissions
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          sudo mkdir -p ~/.ssh
+          sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
 
       - name: Check environment variables for EC2 Instance 1
         run: |
@@ -107,12 +107,12 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
           rsync -avz -e "ssh -i key.pem" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
-          rm key.pem
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
 
       - name: Check environment variables for EC2 Instance 2
         run: |
@@ -127,9 +127,9 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
           rsync -avz -e "ssh -i key.pem" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
-          rm key.pem
+          sudo rm key.pem
 
   test:
     runs-on: ubuntu-latest
@@ -138,11 +138,11 @@ jobs:
     steps:
       - name: Create .ssh directory with correct permissions
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          sudo mkdir -p ~/.ssh
+          sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
 
       - name: Test on EC2 Instance 1
         env:
@@ -151,16 +151,16 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
+          sudo chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
           ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo yum install -y nodejs"
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && npm install"
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && npm test -- --watchAll=false"
-          rm key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm install"
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm test -- --watchAll=false"
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
 
       - name: Test on EC2 Instance 2
         env:
@@ -169,13 +169,13 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
+          sudo chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
           ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo yum install -y nodejs"
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && npm install"
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && npm test -- --watchAll=false"
-          rm key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm install"
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm test -- --watchAll=false"
+          sudo rm key.pem
 
   build:
     runs-on: ubuntu-latest
@@ -184,11 +184,11 @@ jobs:
     steps:
       - name: Create .ssh directory with correct permissions
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          sudo mkdir -p ~/.ssh
+          sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
 
       - name: Build on EC2 Instance 1
         env:
@@ -197,12 +197,12 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && npm run build"
-          rm key.pem
+          sudo chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm run build"
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
 
       - name: Build on EC2 Instance 2
         env:
@@ -211,9 +211,9 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && npm run build"
-          rm key.pem
+          sudo chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm run build"
+          sudo rm key.pem
 
   deploy:
     runs-on: ubuntu-latest
@@ -222,11 +222,11 @@ jobs:
     steps:
       - name: Create .ssh directory with correct permissions
         run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
+          sudo mkdir -p ~/.ssh
+          sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2 Instance 1
         env:
@@ -235,12 +235,12 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
           ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo cp -r /home/${{ secrets.EC2_USER }}/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
-          rm key.pem
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2 Instance 2
         env:
@@ -249,6 +249,6 @@ jobs:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
-          chmod 600 key.pem
+          sudo chmod 600 key.pem
           ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo cp -r /home/${{ secrets.EC2_USER }}/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
-          rm key.pem
+          sudo rm key.pem
