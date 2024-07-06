@@ -15,27 +15,27 @@ jobs:
 
       - name: Create .ssh directory with correct permissions
         run: |
-          sudo mkdir -p ~/.ssh
-          sudo chmod 700 ~/.ssh
+          sudo mkdir -p /home/runner/.ssh
+          sudo chmod 700 /home/runner/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Add EC2 Instance 2 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Generate public key from private key
         env:
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh-keygen -y -f key.pem > key.pub
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh-keygen -y -f /home/runner/key.pem | sudo tee /home/runner/key.pub
 
       - name: Debug Check generated public key
-        run: sudo cat key.pub
+        run: sudo cat /home/runner/key.pub
 
       - name: Add public key to EC2 Instance 1 authorized_keys
         env:
@@ -43,10 +43,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo cat key.pub | sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo mkdir -p ~/.ssh && sudo chmod 700 ~/.ssh && sudo tee -a ~/.ssh/authorized_keys"
-          sudo rm key.pem key.pub
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo cat /home/runner/key.pub | sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo mkdir -p ~/.ssh && sudo chmod 700 ~/.ssh && sudo tee -a ~/.ssh/authorized_keys"
+          sudo rm /home/runner/key.pem /home/runner/key.pub
 
       - name: Verify SSH key permissions and authorized_keys on EC2 Instance 1
         env:
@@ -54,10 +54,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo ls -la ~/.ssh && sudo cat ~/.ssh/authorized_keys"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo ls -la ~/.ssh && sudo cat ~/.ssh/authorized_keys"
+          sudo rm /home/runner/key.pem
 
       - name: Add public key to EC2 Instance 2 authorized_keys
         env:
@@ -65,11 +65,11 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh-keygen -y -f key.pem > key.pub
-          sudo cat key.pub | sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo mkdir -p ~/.ssh && sudo chmod 700 ~/.ssh && sudo tee -a ~/.ssh/authorized_keys"
-          sudo rm key.pem key.pub
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh-keygen -y -f /home/runner/key.pem | sudo tee /home/runner/key.pub
+          sudo cat /home/runner/key.pub | sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo mkdir -p ~/.ssh && sudo chmod 700 ~/.ssh && sudo tee -a ~/.ssh/authorized_keys"
+          sudo rm /home/runner/key.pem /home/runner/key.pub
 
       - name: Verify SSH key permissions and authorized_keys on EC2 Instance 2
         env:
@@ -77,10 +77,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo ls -la ~/.ssh && sudo cat ~/.ssh/authorized_keys"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo ls -la ~/.ssh && sudo cat ~/.ssh/authorized_keys"
+          sudo rm /home/runner/key.pem
 
   copy:
     runs-on: ubuntu-latest
@@ -92,16 +92,16 @@ jobs:
 
       - name: Create .ssh directory with correct permissions
         run: |
-          sudo mkdir -p ~/.ssh
-          sudo chmod 700 ~/.ssh
+          sudo mkdir -p /home/runner/.ssh
+          sudo chmod 700 /home/runner/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Add EC2 Instance 2 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Check environment variables for EC2 Instance 1
         run: |
@@ -115,10 +115,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo rsync -avz -e "ssh -o StrictHostKeyChecking=no -i key.pem" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo rsync -avz -e "sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
+          sudo rm /home/runner/key.pem
 
       - name: Check environment variables for EC2 Instance 2
         run: |
@@ -132,10 +132,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo rsync -avz -e "ssh -o StrictHostKeyChecking=no -i key.pem" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo rsync -avz -e "sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
+          sudo rm /home/runner/key.pem
 
   test:
     runs-on: ubuntu-latest
@@ -144,12 +144,12 @@ jobs:
     steps:
       - name: Create .ssh directory with correct permissions
         run: |
-          sudo mkdir -p ~/.ssh
-          sudo chmod 700 ~/.ssh
+          sudo mkdir -p /home/runner/.ssh
+          sudo chmod 700 /home/runner/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Test on EC2 Instance 1
         env:
@@ -157,18 +157,18 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo yum install -y nodejs"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm install"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm test -- --watchAll=false"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo yum install -y nodejs"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm install"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm test -- --watchAll=false"
+          sudo rm /home/runner/key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Test on EC2 Instance 2
         env:
@@ -176,14 +176,14 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo yum install -y nodejs"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm install"
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm test -- --watchAll=false"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo yum install -y nodejs"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo mkdir -p /home/${{ secrets.EC2_USER }}/hello-world-frontend"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm install"
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm test -- --watchAll=false"
+          sudo rm /home/runner/key.pem
 
   build:
     runs-on: ubuntu-latest
@@ -192,12 +192,12 @@ jobs:
     steps:
       - name: Create .ssh directory with correct permissions
         run: |
-          sudo mkdir -p ~/.ssh
-          sudo chmod 700 ~/.ssh
+          sudo mkdir -p /home/runner/.ssh
+          sudo chmod 700 /home/runner/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Build on EC2 Instance 1
         env:
@@ -205,14 +205,14 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm run build"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm run build"
+          sudo rm /home/runner/key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Build on EC2 Instance 2
         env:
@@ -220,10 +220,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm run build"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "cd /home/${{ secrets.EC2_USER }}/hello-world-frontend && sudo npm run build"
+          sudo rm /home/runner/key.pem
 
   deploy:
     runs-on: ubuntu-latest
@@ -232,12 +232,12 @@ jobs:
     steps:
       - name: Create .ssh directory with correct permissions
         run: |
-          sudo mkdir -p ~/.ssh
-          sudo chmod 700 ~/.ssh
+          sudo mkdir -p /home/runner/.ssh
+          sudo chmod 700 /home/runner/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Deploy to EC2 Instance 1
         env:
@@ -245,14 +245,14 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo cp -r /home/${{ secrets.EC2_USER }}/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "sudo cp -r /home/${{ secrets.EC2_USER }}/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
+          sudo rm /home/runner/key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
         run: |
-          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+          sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a /home/runner/.ssh/known_hosts
 
       - name: Deploy to EC2 Instance 2
         env:
@@ -260,7 +260,7 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          sudo echo "${{ secrets.EC2_KEY }}" > key.pem
-          sudo chmod 600 key.pem
-          sudo ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo cp -r /home/${{ secrets.EC2_USER }}/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
-          sudo rm key.pem
+          sudo echo "${{ secrets.EC2_KEY }}" | sudo tee /home/runner/key.pem
+          sudo chmod 600 /home/runner/key.pem
+          sudo ssh -o StrictHostKeyChecking=no -i /home/runner/key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "sudo cp -r /home/${{ secrets.EC2_USER }}/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
+          sudo rm /home/runner/key.pem
