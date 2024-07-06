@@ -79,14 +79,14 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USERNAME@$HOST "curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
-          ssh -i key.pem $USERNAME@$HOST "sudo yum install -y nodejs"
-          ssh -i key.pem $USERNAME@$HOST "mkdir -p /home/$USERNAME/hello-world-frontend"
-          ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm install"
-          ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm test -- --watchAll=false"
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo ssh -i key.pem $USERNAME@$HOST "curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -"
+          sudo ssh -i key.pem $USERNAME@$HOST "sudo yum install -y nodejs"
+          sudo ssh -i key.pem $USERNAME@$HOST "mkdir -p /home/$USERNAME/hello-world-frontend"
+          sudo ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm install"
+          sudo ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm test -- --watchAll=false"
+          sudo rm key.pem
 
   build:
     runs-on: ubuntu-latest
