@@ -25,10 +25,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          rsync -avz -e "ssh -i key.pem" hello-world-frontend/ $USERNAME@$HOST:/home/$USERNAME/hello-world-frontend/
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo rsync -avz -e "ssh -i key.pem" hello-world-frontend/ $USERNAME@$HOST:/home/$USERNAME/hello-world-frontend/
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
         run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
@@ -39,10 +39,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          rsync -avz -e "ssh -i key.pem" hello-world-frontend/ $USERNAME@$HOST:/home/$USERNAME/hello-world-frontend/
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo rsync -avz -e "ssh -i key.pem" hello-world-frontend/ $USERNAME@$HOST:/home/$USERNAME/hello-world-frontend/
+          sudo rm key.pem
 
   test:
     runs-on: ubuntu-latest
@@ -105,10 +105,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm run build"
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm run build"
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
         run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
@@ -119,10 +119,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm run build"
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo ssh -i key.pem $USERNAME@$HOST "cd /home/$USERNAME/hello-world-frontend && npm run build"
+          sudo rm key.pem
 
   deploy:
     runs-on: ubuntu-latest
@@ -141,10 +141,10 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USERNAME@$HOST "sudo cp -r /home/$USERNAME/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo ssh -i key.pem $USERNAME@$HOST "sudo cp -r /home/$USERNAME/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
+          sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
         run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
@@ -155,7 +155,7 @@ jobs:
           USERNAME: ${{ secrets.EC2_USER }}
           KEY: ${{ secrets.EC2_KEY }}
         run: |
-          echo "$KEY" > key.pem
-          chmod 600 key.pem
-          ssh -i key.pem $USERNAME@$HOST "sudo cp -r /home/$USERNAME/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
-          rm key.pem
+          sudo echo "$KEY" > key.pem
+          sudo chmod 600 key.pem
+          sudo ssh -i key.pem $USERNAME@$HOST "sudo cp -r /home/$USERNAME/hello-world-frontend/build/* /usr/share/nginx/html/ && sudo systemctl restart nginx"
+          sudo rm key.pem
