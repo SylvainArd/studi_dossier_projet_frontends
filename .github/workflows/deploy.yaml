@@ -27,6 +27,26 @@ jobs:
           echo "USERNAME=${{ secrets.EC2_USER }}"
           echo "KEY length=$(echo -n "${{ secrets.EC2_KEY }}" | wc -c)"
 
+      - name: Verify SSH key permissions and authorized_keys on EC2 Instance 1
+        env:
+          HOST: ${{ secrets.EC2_FRONTEND_HOST_1 }}
+          USERNAME: ${{ secrets.EC2_USER }}
+          KEY: ${{ secrets.EC2_KEY }}
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "
+            mkdir -p ~/.ssh;
+            chmod 700 ~/.ssh;
+            touch ~/.ssh/authorized_keys;
+            chmod 600 ~/.ssh/authorized_keys;
+            echo '$(cat ~/.ssh/authorized_keys)' >> ~/.ssh/authorized_keys;
+            cat ~/.ssh/authorized_keys;
+            ls -la ~/.ssh;
+            sudo tail -n 20 /var/log/auth.log;
+          "
+          rm key.pem
+
       - name: Copy code to EC2 Instance 1
         env:
           HOST: ${{ secrets.EC2_FRONTEND_HOST_1 }}
@@ -35,8 +55,6 @@ jobs:
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
           chmod 600 key.pem
-          ls -l key.pem  # Vérifie les permissions du fichier
-          cat key.pem  # Vérifie le contenu du fichier (Attention : Cela imprimera la clé dans les logs)
           ssh -v -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }} "echo Connection successful" || exit 1
           rsync -avz -e "ssh -i key.pem" --rsync-path="sudo rsync" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_1 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
           rm key.pem
@@ -50,6 +68,26 @@ jobs:
           echo "USERNAME=${{ secrets.EC2_USER }}"
           echo "KEY length=$(echo -n "${{ secrets.EC2_KEY }}" | wc -c)"
 
+      - name: Verify SSH key permissions and authorized_keys on EC2 Instance 2
+        env:
+          HOST: ${{ secrets.EC2_FRONTEND_HOST_2 }}
+          USERNAME: ${{ secrets.EC2_USER }}
+          KEY: ${{ secrets.EC2_KEY }}
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "
+            mkdir -p ~/.ssh;
+            chmod 700 ~/.ssh;
+            touch ~/.ssh/authorized_keys;
+            chmod 600 ~/.ssh/authorized_keys;
+            echo '$(cat ~/.ssh/authorized_keys)' >> ~/.ssh/authorized_keys;
+            cat ~/.ssh/authorized_keys;
+            ls -la ~/.ssh;
+            sudo tail -n 20 /var/log/auth.log;
+          "
+          rm key.pem
+
       - name: Copy code to EC2 Instance 2
         env:
           HOST: ${{ secrets.EC2_FRONTEND_HOST_2 }}
@@ -58,8 +96,6 @@ jobs:
         run: |
           echo "${{ secrets.EC2_KEY }}" > key.pem
           chmod 600 key.pem
-          ls -l key.pem  # Vérifie les permissions du fichier
-          cat key.pem  # Vérifie le contenu du fichier (Attention : Cela imprimera la clé dans les logs)
           ssh -v -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }} "echo Connection successful" || exit 1
           rsync -avz -e "ssh -i key.pem" --rsync-path="sudo rsync" hello-world-frontend/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_FRONTEND_HOST_2 }}:/home/${{ secrets.EC2_USER }}/hello-world-frontend/
           rm key.pem
