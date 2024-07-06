@@ -19,7 +19,8 @@ jobs:
           sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Generate public key from private key
         env:
@@ -53,7 +54,8 @@ jobs:
           sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Add public key to EC2 Instance 2 authorized_keys
         env:
@@ -92,7 +94,8 @@ jobs:
           sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Check environment variables for EC2 Instance 1
         run: |
@@ -112,7 +115,8 @@ jobs:
           sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Check environment variables for EC2 Instance 2
         run: |
@@ -142,7 +146,8 @@ jobs:
           sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Test on EC2 Instance 1
         env:
@@ -160,7 +165,8 @@ jobs:
           sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Test on EC2 Instance 2
         env:
@@ -188,7 +194,8 @@ jobs:
           sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Build on EC2 Instance 1
         env:
@@ -202,7 +209,8 @@ jobs:
           sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Build on EC2 Instance 2
         env:
@@ -226,7 +234,8 @@ jobs:
           sudo chmod 700 ~/.ssh
 
       - name: Add EC2 Instance 1 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Deploy to EC2 Instance 1
         env:
@@ -240,7 +249,8 @@ jobs:
           sudo rm key.pem
 
       - name: Add EC2 Instance 2 to known_hosts
-        run: sudo ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} | sudo tee -a ~/.ssh/known_hosts
 
       - name: Deploy to EC2 Instance 2
         env:
