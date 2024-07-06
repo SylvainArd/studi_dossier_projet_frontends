@@ -21,6 +21,12 @@ jobs:
       - name: Add EC2 Instance 1 to known_hosts
         run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_1 }} >> ~/.ssh/known_hosts
 
+      - name: Check environment variables for EC2 Instance 1
+        run: |
+          echo "HOST=${{ secrets.EC2_FRONTEND_HOST_1 }}"
+          echo "USERNAME=${{ secrets.EC2_USER }}"
+          echo "KEY length=$(echo -n "${{ secrets.EC2_KEY }}" | wc -c)"
+
       - name: Copy code to EC2 Instance 1
         env:
           HOST: ${{ secrets.EC2_FRONTEND_HOST_1 }}
@@ -34,6 +40,12 @@ jobs:
 
       - name: Add EC2 Instance 2 to known_hosts
         run: ssh-keyscan -H ${{ secrets.EC2_FRONTEND_HOST_2 }} >> ~/.ssh/known_hosts
+
+      - name: Check environment variables for EC2 Instance 2
+        run: |
+          echo "HOST=${{ secrets.EC2_FRONTEND_HOST_2 }}"
+          echo "USERNAME=${{ secrets.EC2_USER }}"
+          echo "KEY length=$(echo -n "${{ secrets.EC2_KEY }}" | wc -c)"
 
       - name: Copy code to EC2 Instance 2
         env:
